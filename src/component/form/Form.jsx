@@ -11,9 +11,10 @@ const BackDrop = (props) => {
 };
 
 const ModalOverlay = (props) => {
-    const [name,setName] = useState("")
-    const [phone,setPhone] = useState("")
-    const [address,setAddress] = useState("")
+    const {student} = props
+    const [name,setName] = useState(student?.name ?? "")
+    const [phone,setPhone] = useState(student?.phone ?? "")
+    const [address,setAddress] = useState(student?.address ?? "")
 
     const ctx = useContext(StudentContext)
 
@@ -21,7 +22,7 @@ const ModalOverlay = (props) => {
         e.preventDefault()
         console.log("ctx" ,ctx)    
         let newStudent = {
-            id:phone+Math.random()+phone,
+            id:student?.id ?? phone+Math.random()+phone,
             name:name,
             phone:phone,
             address:address
@@ -37,15 +38,15 @@ const ModalOverlay = (props) => {
         <p className="font-bold">Enter Details</p>
         <div className="flex justify-between">
             <label>Name:</label>
-            <input type="text" className="border-2" value={name} onChange={(e)=>setName(e.target.value)}/>
+            <input type="text" className="border-2" value={name} onChange={(e)=>setName(e.target.value)} required/>
         </div>
         <div className="flex justify-between">
             <label>Phone:</label>
-            <input type="tel" className="border-2" value={phone} onChange={(e)=>setPhone(e.target.value)}/>
+            <input type="tel" className="border-2" pattern="^\d{10}$" value={phone} onChange={(e)=>setPhone(e.target.value)} required/>
         </div>
         <div className="flex justify-between">
             <label>Address:</label>
-            <input type="text" className="border-2" value={address} onChange={(e)=>setAddress(e.target.value)}/>
+            <input type="text" className="border-2" value={address} onChange={(e)=>setAddress(e.target.value)} required/>
         </div>
         
       </div>
@@ -58,7 +59,7 @@ const ModalOverlay = (props) => {
             Close
           </button>
           <button type="submit"  className="bg-red-500 p-2 mt-2 px-4 rounded-xl text-white">
-            Order
+            Enter
           </button>
         </div>
       </div>
@@ -74,7 +75,7 @@ const Form = (props) => {
         document.getElementById("bg-overlay")
       )}
       {ReactDOM.createPortal(
-        <ModalOverlay onClose={props.onClose} />,
+        <ModalOverlay onClose={props.onClose} student={props.student}/>,
         document.getElementById("modal-overlay")
       )}
     </>
